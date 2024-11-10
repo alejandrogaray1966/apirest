@@ -44,7 +44,7 @@ Se agregó al proyecto una API REST, que permite la consulta, modificación, eli
     - `especialidad`: Disciplina a desarrollar.  
     - `precio`: Precio de la clase.
 
-  > **Nota**: El campo `id` se genera automáticamente y no debe incluirse en el JSON.
+  > **Nota**: El campo `id` se genera automáticamente y no es necesario incluirlo en el JSON.
 
 ---
 
