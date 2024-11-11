@@ -13,7 +13,7 @@
     //$router->addMiddleware(new Autenticar());
 
     //                 endpoint     |    verbo   |     controller     |    método
-    //$router->addRoute('promos'      ,   'GET'    , 'PromoController'  , 'obtenerTodas');
+    $router->addRoute('promos'      ,   'GET'    , 'PromoController'  , 'obtenerTodas');
     $router->addRoute('promos/:id'  ,   'GET'    , 'PromoController'  , 'obtenerUna');
     $router->addRoute('promos'      ,   'POST'   , 'PromoController'  , 'agregar');
     $router->addRoute('promos/:id'  ,   'DELETE' , 'PromoController'  , 'borrar');

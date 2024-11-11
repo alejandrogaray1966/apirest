@@ -7,64 +7,64 @@ require_once 'db/model.php';
 class PromoModel extends Model{
  
     //  Funciones de la Clase
-    public function obtenerTodasPromociones($orderBy = false , $orderDirection = ' ASC ', $filtrado = null, $valor = null, $limite = null, $pagina = null){
-        
+
+    public function obtenerTodasPromociones( $filtrado = null , $valor = null , $ordenado = null , $manera = null , $pagina = null , $cantidad = null ) {
         //  Preparo la consulta
         $sql = 'SELECT * FROM promociones';
-        // filtro
-        if($filtrado == 'precio' || $filtrado == 'destino_inicio' || $filtrado == 'destino_fin' || $filtrado == 'fecha_salida'){
+        //  Preparo el filtro
+        if ( $filtrado == 'fecha' || $filtrado == 'horario' || $filtrado == 'especialidad' || $filtrado == 'precio' ) {
             $sql .= ' WHERE ' . $filtrado . ' = ? ';
         }
-
-        
-        //ordenamineto 
-        if ($orderBy) {
+        //  Preparo el orden
+        if ( $ordenado ) {
             $sql .= ' ORDER BY ';     
-            switch ($orderBy) {
+            switch ( $ordenado ) {
+                case 'fecha':
+                    $sql .= ' fecha ';
+                    break;
+                case 'horario':
+                    $sql .= ' horario ';
+                    break;
+                case 'especialidad':
+                    $sql .= ' especialidad ';
+                    break;
                 case 'precio':
                     $sql .= ' precio ';
                     break;
-                case 'fecha':
-                    $sql .= ' fecha_salida ';
-                    break;
-                case 'destino-inicio':
-                    $sql .= ' destino_inicio ';
-                    break;
-                case 'destino-fin':
-                    $sql .= ' destino_fin ';
-                    break;
                 default:
-                    // $sql .= ' id_boleto ';
-                    return ('el campo no existe');
+                    $sql .= ' id_promocion ';
                     break;
             }
-            // direcion del orden
-            if ($orderDirection === 'DESC') {
-                $sql .= ' DESC';  
+            // Direción del orden
+            if ( $manera === 'DESC' ) {
+                $sql .= ' DESC ';  
             } else {
-                $sql .= ' ASC';  
+                $sql .= ' ASC ';  
             }            
         }
-
-        if($pagina !== null){
-            $paginacion = ($pagina - 1) * $limite;
-
-            $paginacion = (int) $paginacion;
-            $sql .= ' LIMIT ' . $limite;
-            $sql .= ' OFFSET ' . $paginacion;
+        //  Preparo la paginación
+        if ( $pagina !== null ) {
+            if ( $pagina > 1 ) {
+                $aPartirDel = ( $pagina - 1 ) * $cantidad;
+                $aPartirDel = (int) $aPartirDel;
+            } else {
+                $aPartirDel = 0;
+            }
+            $sql .= ' LIMIT ' . $cantidad;
+            $sql .= ' OFFSET ' . $aPartirDel;
         }
-        
-        // Preparar la consulta
+        //  Preparo la consulta
         $query = $this->db->prepare($sql);
-    
-        if ($valor !== null ||  $filtrado !== null) {
+        //  Ejecuto la consulta
+        if ( $filtrado == 'fecha' || $filtrado == 'horario' || $filtrado == 'especialidad' || $filtrado == 'precio' ) {
             $query->execute([$valor]);
-        }else{        
+        } else {        
             $query->execute([]);
         }
-
-        $boleto = $query->fetchAll(PDO::FETCH_OBJ);
-        return $boleto;
+        //  Obtengo los datos
+        $promociones = $query->fetchAll(PDO::FETCH_OBJ);
+        //  Devuelvo los datos
+        return $promociones;
     }
 
     public function obtenerUnaPromocion($id){

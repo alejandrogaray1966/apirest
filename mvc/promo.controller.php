@@ -13,51 +13,40 @@
             $this->vista = new JSONVvista();       
         }
 
-        // api/promos
-        public function obtenerTodas ($req, $res){
-            
-            $orderBy = null;
-            $orderDirection = null;
+        //      GET     /api/promos
+        public function obtenerTodas($req, $res) {
+            // defino las variables de los parámetros
             $filtrado = null;
             $valor = null;
-            $pagina = null; // si no tine nada traigo todos, verifico si es numero
-            $limite = null; // si vine pagina le doy un valor por defecto, verifico si es nuemro 
-            
-            if(isset($req->query->filtro)){
-                $filtrado = $req->query->filtro;
-            }
-            if(isset($req->query->valor)){
+            $ordenado = null;
+            $manera = null;
+            $pagina = null;
+            $cantidad = null;
+            // verifico el filtro
+            if ( isset($req->query->filtrado) && isset($req->query->valor) ) {
+                $filtrado = $req->query->filtrado;
                 $valor = $req->query->valor;
             }
-            
-            if(isset($req->query->orderBy)){
-                $orderBy = $req->query->orderBy;
+            // verifico el orden
+            if ( isset($req->query->ordenado) && isset($req->query->manera) ) {
+                $ordenado = $req->query->ordenado;
+                $manera = $req->query->manera;
             }
-            if(isset($req->query->orderDirection)){
-                $orderDirection =$req->query->orderDirection;
+            // verifico la paginación
+            if ( isset($req->query->pagina) && is_numeric($req->query->pagina) && isset($req->query->cantidad) && is_numeric($req->query->cantidad)) {
+                $pagina= (int) $req->query->pagina;
+                $cantidad = (int) $req->query->cantidad;           
             }
-            if(isset($req->query->pagina) && is_numeric($req->query->pagina) ){
-                $pagina= $req->query->pagina;            
+            // obtengo los datos
+            $promociones = $this->modelo->obtenerTodasPromociones($filtrado,$valor,$ordenado,$manera,$pagina,$cantidad);
+            if($promociones == null){
+                return $this->vista->response('No hay Promociones que cumplan los parámetros', 404);
             }
-            if(isset($req->query->limite) && is_numeric($req->query->limite)){
-                $limite = $req->query->limite;
-            }
-            if($limite == null && $pagina !== null){
-                $limite = 5;
-            } else {
-                $limite = (int) $limite;
-            }
-            
-            $boleto = $this->modelo->obtenerTodasPromociones($orderBy, $orderDirection, $filtrado, $valor, $limite, $pagina);
-            if($boleto == null){
-                return $this->vista->response('no hay boletos con esas especificaciones', 404);
-            }
-
-            return $this->vista->response($boleto);
+            return $this->vista->response($promociones);
         }
 
         //      GET     /api/promos/:ID
-        public function obtenerUna($req, $res) {
+        public function obtenerUna($req,$res) {
             // verificar el ID
             $id = $req->params->id;
             $promo = $this->modelo->obtenerUnaPromocion($id);
@@ -68,7 +57,7 @@
         }
 
         //      POST    /api/promos
-        public function agregar($req,$res){
+        public function agregar($req,$res) {
             // verificar si se hizo LOGIN
             //if(!$res->user) {
                 //return $this->vista->response("No autorizado", 401);
@@ -107,7 +96,7 @@
                 return $this->vista->response('No se encuentra el Precio', 400);
             }
             if ( is_numeric($req->body->precio) ) {
-                $precio = $req->body->precio;
+                $precio = (int) $req->body->precio;
             }else{
                 return $this->vista->response('Debe completar el precio', 400);
             }
@@ -121,7 +110,7 @@
         }
 
         //    DELETE    /api/promos/:ID
-        public function borrar ($req, $res){
+        public function borrar($req,$res) {
             // verificar si se hizo LOGIN
             //if(!$res->user) {
             //    return $this->vista->response("No autorizado", 401);
@@ -137,7 +126,7 @@
         }
 
         //      PUT     /api/promos/:ID
-        public function modificar ($req, $res){
+        public function modificar($req,$res) {
             // verificar si se hizo LOGIN
             //if(!$res->user) {
             //    return $this->vista->response("No autorizado", 401);
@@ -149,7 +138,7 @@
                 return $this->vista->response("La Promoción con el id $id no existe", 404);
             }
             // verificar los datos
-            if ( !isset($req->body->fecha) & !isset($req->body->horario) & !isset($req->body->especialidad) & !isset($req->body->precio) ) {
+            if ( !isset($req->body->fecha) && !isset($req->body->horario) && !isset($req->body->especialidad) && !isset($req->body->precio) ) {
                 return $this->vista->response('Falta completar los Datos', 400);
             }
             // verificar la fecha
@@ -189,7 +178,7 @@
                 $precio = $promo->precio;
             } else {
                 if ( is_numeric($req->body->precio) ) {
-                    $precio = $req->body->precio;
+                    $precio = (int) $req->body->precio;
                 }else{
                     return $this->vista->response('Debe completar el precio', 400);
                 }

@@ -62,6 +62,8 @@ Se agregó al proyecto una API REST, que permite la consulta, modificación, eli
     - `especialidad`: Disciplina a desarrollar.  
     - `precio`: Precio de la clase.
 
+  > **Nota**: Se puede modificar un Dato solo, sin necesidad de completar los otros.  
+
 ---
 
 - **GET** `/api/promos` + orden  
