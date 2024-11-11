@@ -58,6 +58,7 @@
 
         //      GET     /api/promos/:ID
         public function obtenerUna($req, $res) {
+            // verificar el ID
             $id = $req->params->id;
             $promo = $this->modelo->obtenerUnaPromocion($id);
             if ( !$promo ) {
@@ -125,6 +126,7 @@
             //if(!$res->user) {
             //    return $this->vista->response("No autorizado", 401);
             //}
+            // verificar el ID
             $id = $req->params->id;
             $promo = $this->modelo->obtenerUnaPromocion($id);
             if ( !$promo ) {
@@ -134,48 +136,69 @@
             return $this->vista->response("Se ha borrado con éxito la Promoción con id $id", 200);
         }
 
-    // api/boleto/:id
-    public function editarBoleto ($req, $res){
-        
-        if(!$res->user) {
-            return $this->vista->response("No autorizado", 401);
+        //      PUT     /api/promos/:ID
+        public function modificar ($req, $res){
+            // verificar si se hizo LOGIN
+            //if(!$res->user) {
+            //    return $this->vista->response("No autorizado", 401);
+            //}
+            // verificar el ID
+            $id = $req->params->id;
+            $promo = $this->modelo->obtenerUnaPromocion($id);
+            if ( !$promo ) {
+                return $this->vista->response("La Promoción con el id $id no existe", 404);
+            }
+            // verificar los datos
+            if ( !isset($req->body->fecha) & !isset($req->body->horario) & !isset($req->body->especialidad) & !isset($req->body->precio) ) {
+                return $this->vista->response('Falta completar los Datos', 400);
+            }
+            // verificar la fecha
+            if ( !isset($req->body->fecha)) {
+                $fecha = $promo->fecha;
+            } else {
+                $fecha_obje = DateTime :: createFromFormat('Y-m-d', $req->body->fecha);
+                if ( $fecha_obje && $fecha_obje->format('Y-m-d') === $req->body->fecha ) {
+                    $fecha = $req->body->fecha;
+                    if ( empty($fecha) ) {
+                        return $this->vista->response('Debe completar la Fecha', 400);
+                    }
+                } else {
+                    return $this->vista->response('La Fecha debe tener el formato Y-m-d', 400);
+                }
+            }
+            // verificar el horario
+            if ( !isset($req->body->horario)) {
+                $horario = $promo->horario;
+            } else {
+                $horario = $req->body->horario;
+                if ( empty($horario) ) {
+                    return $this->vista->response('Debe completar el Horario', 400);
+                }
+            }
+            // verificar la especialidad
+            if ( !isset($req->body->especialidad)) {
+                $especialidad = $promo->especialidad;
+            } else {
+                $especialidad = $req->body->especialidad;
+                if ( empty($especialidad) ) {
+                    return $this->vista->response('Debe completar la Especialidad', 400);
+                }
+            }
+            // verificar el precio
+            if ( !isset($req->body->precio)) {
+                $precio = $promo->precio;
+            } else {
+                if ( is_numeric($req->body->precio) ) {
+                    $precio = $req->body->precio;
+                }else{
+                    return $this->vista->response('Debe completar el precio', 400);
+                }
+            }
+            // modifico los datos
+            $this->modelo->modificarPromocion($id,$fecha,$horario,$especialidad,$precio);
+            return $this->vista->response("La Promoción se ha modificado con exito, con el id $id",201);
         }
 
-        $id = $req->params->id;
-        // verifico que exista
-        $boleto = $this->modelo->obtenerUnaPromocion($id);
-        if (!$boleto) {
-            return $this->vista->response("El boleto con el id=$id no existe", 404);
-        }
-            // valido los datos
-        if (!isset($req->body->destino_inicio) || empty($req->body->destino_inicio) ||
-            !isset($req->body->destino_fin) || empty($req->body->destino_fin) ||
-            !isset($req->body->fecha_salida) || empty($req->body->fecha_salida) ||
-            !isset($req->body->precio) || empty($req->body->precio)){
-            return $this->vista->response('Faltan completar datos', 400);
-        }
-        
-        $feccha_obje = DateTime :: createFromFormat('Y-m-d', $req->body->fecha_salida);
-
-        if($feccha_obje && $feccha_obje->format('Y-m-d') === $req->body->fecha_salida ){
-            $fecha_salida = $req->body->fecha_salida;
-        }else{
-            return $this->vista->response('La fecha no es correcta', 400);
-        }
-        if(is_numeric($req->body->precio)){
-            $precio = $req->body->precio;
-        }else{
-            return $this->vista->response('No es un precio correcto', 400);
-        }
-
-        $destino_inicio = $req->body->destino_inicio;       
-        $destino_fin = $req->body->destino_fin;   
-
-        $this->modelo->editarBoleto($id, $destino_inicio, $destino_fin, $fecha_salida , $precio);
-
-        $boleto = $this->modelo->obtenerUnaPromocion($id);
-        $this->vista->response($boleto, 200);
-        
     }
 
-}
+?>

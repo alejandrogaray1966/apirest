@@ -69,11 +69,8 @@
             foreach ($this->middlewares as $middleware) {
                 $middleware->run($this->request, $this->response);
             }
-            //$ruta->url //no compila!
             foreach ($this->routeTable as $route) {
                 if($route->match($url, $verb)){
-                    //TODO: ejecutar el controller//ejecutar el controller
-                    // pasarle los parametros
                     $route->run($this->request, $this->response);
                     return;
                 }
@@ -87,7 +84,7 @@
             $this->middlewares[] = $middleware;
         }
     
-        public function addRoute ($url, $verb, $controller, $method) {
+        public function addRoute($url, $verb, $controller, $method) {
             $this->routeTable[] = new Route($url, $verb, $controller, $method);
         }
 

@@ -17,7 +17,7 @@
     $router->addRoute('promos/:id'  ,   'GET'    , 'PromoController'  , 'obtenerUna');
     $router->addRoute('promos'      ,   'POST'   , 'PromoController'  , 'agregar');
     $router->addRoute('promos/:id'  ,   'DELETE' , 'PromoController'  , 'borrar');
-    //$router->addRoute('promos/:id'  ,   'PUT'    , 'PromoController'  , 'modificar');
+    $router->addRoute('promos/:id'  ,   'PUT'    , 'PromoController'  , 'modificar');
     
     //$router->addRoute('usuarios/token', 'GET'    , 'UsuarioController'  ,  'obtenerToken');
 

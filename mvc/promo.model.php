@@ -87,9 +87,10 @@ class PromoModel extends Model{
         return;
     }
 
-    public function editarBoleto($id, $destino_inicio, $destino_fin, $fecha_salida, $precio){
-        $query = $this->db->prepare('UPDATE boleto SET destino_inicio = ?, destino_fin = ?, fecha_salida = ?, precio = ? WHERE id_boleto = ?');
-        $query->execute([$destino_inicio, $destino_fin, $fecha_salida, $precio, $id]);
+    public function modificarPromocion($id,$fecha,$horario,$especialidad,$precio){
+        $query = $this->db->prepare('UPDATE promociones SET fecha = ?, horario = ?, especialidad = ?, precio = ? WHERE id_promocion = ?');
+        $query->execute([$fecha,$horario,$especialidad,$precio,$id]);
+        return;
     }
 
 }
