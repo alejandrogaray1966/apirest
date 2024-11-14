@@ -30,7 +30,6 @@
                 $code = 500;
             }
             return $status[$code];
-            //return (isset($status[$code])) ? $status[$code] : $status[500];
         }
 
     }

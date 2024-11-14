@@ -20,7 +20,6 @@
     $router->addRoute('promos/:id'  ,   'PUT'    , 'PromoController'  , 'modificar');
     //hacer uno por defecto
     $router->addRoute('usuarios/login', 'GET'    , 'UsuarioController', 'obtenerToken');
-    //$router->addRoute('usuarios/logout', 'GET'    , 'UsuarioController', 'borrarToken');
 
     $router->route($_GET['resource'], $_SERVER['REQUEST_METHOD']);
 

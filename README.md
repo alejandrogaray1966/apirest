@@ -131,13 +131,6 @@ Se agregó al proyecto una API REST, que permite la consulta, modificación, eli
   -El servidor validará que el Token JWT sea correcto, desencriptandolo mediante la misma llave que utilizo para encriptarlo.  
   -Si el Token JWT es correcto, entonces el servidor retornará los datos solicitados.  
 
-- **GET** `/usuarios/logout`  
-Este endpoint permite al Administrador borrar el Token JWT generado. Cerrando así la Sesión. Se deben enviar las credenciales en el encabezado de la solicitud en formato Base64 (usuario:contraseña).
-
-  - **Cerrar Sesión**:  
-    - **Username**: `webadmin`  
-    - **Password**: `admin`  
-
 ---
 
 <!-- Fecha de entrega tercera parte: 17/11/24 -->  

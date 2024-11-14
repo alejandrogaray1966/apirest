@@ -20,31 +20,28 @@
     }
 
     function validateJWT($jwt) {
-
+        // Controlamos si hay Header Payload Firma
         $jwt = explode('.', $jwt);
         if ( count($jwt) != 3 ) {
             return null;
         }
-
         $header = $jwt[0];
         $payload = $jwt[1];
         $signature = $jwt[2];
-
+        // Validamos Firma
         $valid_signature = hash_hmac('sha256', $header . "." . $payload, 'mi1secreto', true);
         $valid_signature = base64_encode($valid_signature);
         $valid_signature = str_replace(['+', '/', '='], ['-', '_', ''], $valid_signature);
-
         if($signature != $valid_signature) {
             return null;
         }
-
+        // Validamos Tiempo
         $payload = base64_decode($payload);
         $payload = json_decode($payload);
-
         if($payload->exp < time()) {
             return null;
         }
-
+        // Todo OK
         return $payload;
 
     }
