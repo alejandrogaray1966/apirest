@@ -19,7 +19,7 @@
                 301 => "Moved Permanently",
                 302 => "Found",
                 400 => "Bad Request - El Servidor no pudo interpretar la solicitud...",
-                401 => "Unauthorized",
+                401 => "Unauthorized - No autorizado...",
                 403 => "Forbidden",
                 404 => "Not Found - Dato no encontrado...",
                 410 => "Gone",

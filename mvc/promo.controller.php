@@ -59,9 +59,9 @@
         //      POST    /api/promos
         public function agregar($req,$res) {
             // verificar si se hizo LOGIN
-            //if(!$res->user) {
-                //return $this->vista->response("No autorizado", 401);
-            //}
+            if(!$res->user) {
+                return $this->vista->response("Debe hacer LOGIN y usar el TOKEN para poder agregar datos", 401);
+            }
             // verificar la fecha
             if ( !isset($req->body->fecha)) {
                 return $this->vista->response('No se encuentra la Fecha', 400);
@@ -112,9 +112,9 @@
         //    DELETE    /api/promos/:ID
         public function borrar($req,$res) {
             // verificar si se hizo LOGIN
-            //if(!$res->user) {
-            //    return $this->vista->response("No autorizado", 401);
-            //}
+            if(!$res->user) {
+                return $this->vista->response("Debe hacer LOGIN y usar el TOKEN para poder borrar datos", 401);
+            }
             // verificar el ID
             $id = $req->params->id;
             $promo = $this->modelo->obtenerUnaPromocion($id);
@@ -128,9 +128,9 @@
         //      PUT     /api/promos/:ID
         public function modificar($req,$res) {
             // verificar si se hizo LOGIN
-            //if(!$res->user) {
-            //    return $this->vista->response("No autorizado", 401);
-            //}
+            if(!$res->user) {
+                return $this->vista->response("Debe hacer LOGIN y usar el TOKEN para poder modificar datos", 401);
+            }
             // verificar el ID
             $id = $req->params->id;
             $promo = $this->modelo->obtenerUnaPromocion($id);

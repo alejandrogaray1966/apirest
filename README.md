@@ -106,7 +106,7 @@ Se agregó al proyecto una API REST, que permite la consulta, modificación, eli
     Permite ver los resultados divididos en páginas, cada página tendrá un número de hoja, y cada hoja tendrá un número de renglones.
 
     - `pagina`: Número de hoja solicitada.
-    - `cantidad`: Cantidad de renglones por hoja.
+    - `cantidad`: Cantidad de renglones por hoja. (Un renglón equivale a una Promoción)
 
   - **Ejemplo de Paginación**:  
   > GET /api/promos?pagina=3&cantidad=5  
@@ -115,17 +115,28 @@ Se agregó al proyecto una API REST, que permite la consulta, modificación, eli
 
 ### Autenticación
 
-Para poder hacer el ABM de las PROMOCIONES, el ADMINISTRADOR debe autenticarse utilizando un **token**.  
+1- Para poder hacer el ABM de las PROMOCIONES, el ADMINISTRADOR debe autenticarse.  
 
-- **POST** `/usuarios/token`  
-  Este endpoint permite al Administrador obtener un token JWT. Se deben enviar las credenciales en el encabezado de la solicitud en formato Base64 (usuario:contraseña).
+- **GET** `/usuarios/login`  
+  Este endpoint permite al Administrador obtener un Token JWT. Se deben enviar las credenciales en el encabezado de la solicitud, en Basic Auth completar los datos requeridos.
 
-  - **iniciar sesión**:  
-    - **Nombre de usuario**: `webadmin`  
-    - **Contraseña**: `admin`
+  - **Iniciar Sesión**:  
+    - **Username**: `webadmin`  
+    - **Password**: `admin`  
 
-  - **Respuesta**:  
-    Si las credenciales son válidas, se devuelve un token JWT que puede ser utilizado para autenticar futuras solicitudes a la API.
+2- Si las credenciales son válidas, se devuelve un Token JWT que puede ser utilizado para autenticar futuras solicitudes a la API, el Token JWT tendrá una validez medida en tiempo.  
+
+  -Copie el Token JWT generado y complete los datos requeridos en Bearer Token.
+  -Una vez con el Token JWT, el usuario realiza una petición al servidor, enviando en el header el Token JWT previamente generado.  
+  -El servidor validará que el Token JWT sea correcto, desencriptandolo mediante la misma llave que utilizo para encriptarlo.  
+  -Si el Token JWT es correcto, entonces el servidor retornará los datos solicitados.  
+
+- **GET** `/usuarios/logout`  
+Este endpoint permite al Administrador borrar el Token JWT generado. Cerrando así la Sesión. Se deben enviar las credenciales en el encabezado de la solicitud en formato Base64 (usuario:contraseña).
+
+  - **Cerrar Sesión**:  
+    - **Username**: `webadmin`  
+    - **Password**: `admin`  
 
 ---
 
